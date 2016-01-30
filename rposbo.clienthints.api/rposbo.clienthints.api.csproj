@@ -48,10 +48,6 @@
       <HintPath>..\packages\ImageResizer.4.0.4\lib\net45\ImageResizer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ImageResizer.Plugins.WebP, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ImageResizer.Plugins.WebP.4.0.4\lib\net45\ImageResizer.Plugins.WebP.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Imazen.WebP, Version=9.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Imazen.WebP.9.0.1\lib\net45\Imazen.WebP.dll</HintPath>
       <Private>True</Private>
@@ -136,9 +132,6 @@
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth">
-      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.Http.Owin">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.3\lib\net45\System.Web.Http.Owin.dll</HintPath>
     </Reference>
@@ -180,9 +173,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\PublishProfiles\clienthints.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

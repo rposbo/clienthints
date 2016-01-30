@@ -1,9 +1,9 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Reflection;
 using System.Web.Http;
 using ImageResizer;
 
@@ -11,17 +11,18 @@ namespace rposbo.clienthints.api.Controllers
 {
     public class ImageController : ApiController
     {
+        private double _pixelDensity;
+
         public HttpResponseMessage Get(string id)
         {
-            var pixelDensity = Request.Headers.GetValues("DPR").FirstOrDefault() != null ? int.Parse(Request.Headers.GetValues("DPR").FirstOrDefault()) : 1;
-            var width = (Request.Headers.GetValues("Width").FirstOrDefault() != null ? double.Parse(Request.Headers.GetValues("Width").FirstOrDefault()) : 0);
-            var newWidth = width * pixelDensity;
-
             var imageBytes = GetOriginalImage(id);
-            var supportsClientHints = width > 0;
 
-            var newImageBytes = supportsClientHints ? ResizeImage(imageBytes, newWidth) : imageBytes;
-            var response = BuildImageResponse(newImageBytes, supportsClientHints);
+            _pixelDensity = double.Parse(Request.Headers.GetValues("DPR") != null ? Request.Headers.GetValues("DPR").First() : "1");
+            var width =  double.Parse(Request.Headers.GetValues("Width") != null ? Request.Headers.GetValues("Width").First() : "0");
+
+            var supportsClientHints = width > 0;
+            var newImageBytes = supportsClientHints ? ResizeImage(imageBytes, width) : imageBytes;
+            var response = BuildImageResponse(newImageBytes);
 
             return response;
         }
@@ -43,11 +44,11 @@ namespace rposbo.clienthints.api.Controllers
             return memoryStream;
         }
 
-        private static HttpResponseMessage BuildImageResponse(MemoryStream memoryStream, bool supportsClientHints)
+        private HttpResponseMessage BuildImageResponse(MemoryStream memoryStream)
         {
             var httpResponseMessage = new HttpResponseMessage { Content = new ByteArrayContent(memoryStream.ToArray()) };
             httpResponseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue($"image/jpg");
-            httpResponseMessage.Content.Headers.Add("ResizedViaClientHints", (supportsClientHints ? "YES!" : "Nope"));
+            httpResponseMessage.Content.Headers.Add("Content-DPR", _pixelDensity.ToString(CultureInfo.InvariantCulture));
             httpResponseMessage.StatusCode = HttpStatusCode.OK;
 
             return httpResponseMessage;
