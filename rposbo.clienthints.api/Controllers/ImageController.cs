@@ -15,13 +15,13 @@ namespace rposbo.clienthints.api.Controllers
 
         public HttpResponseMessage Get(string id)
         {
-            var imageBytes = GetOriginalImage(id);
+            var imageStream = GetOriginalImage(id);
 
             _pixelDensity = double.Parse(Request.Headers.GetValues("DPR") != null ? Request.Headers.GetValues("DPR").First() : "1");
             var width =  double.Parse(Request.Headers.GetValues("Width") != null ? Request.Headers.GetValues("Width").First() : "0");
 
             var supportsClientHints = width > 0;
-            var newImageBytes = supportsClientHints ? ResizeImage(imageBytes, width) : imageBytes;
+            var newImageBytes = supportsClientHints ? ResizeImage(imageStream, width) : imageStream;
             var response = BuildImageResponse(newImageBytes);
 
             return response;
@@ -47,7 +47,7 @@ namespace rposbo.clienthints.api.Controllers
         private HttpResponseMessage BuildImageResponse(MemoryStream memoryStream)
         {
             var httpResponseMessage = new HttpResponseMessage { Content = new ByteArrayContent(memoryStream.ToArray()) };
-            httpResponseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue($"image/jpg");
+            httpResponseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpg");
             httpResponseMessage.Content.Headers.Add("Content-DPR", _pixelDensity.ToString(CultureInfo.InvariantCulture));
             httpResponseMessage.StatusCode = HttpStatusCode.OK;
 
